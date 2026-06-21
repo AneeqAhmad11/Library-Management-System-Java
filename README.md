@@ -1,22 +1,48 @@
 # Library Management System — Java OOP
 
-> A full-featured Library Management System built in **Java**, demonstrating core Object-Oriented Programming concepts including inheritance, abstraction, polymorphism, encapsulation, and interfaces.
+> A console-based Library Management System built in Java demonstrating all four pillars of OOP: **Encapsulation, Inheritance, Polymorphism, and Abstraction**. Developed as an OOP course project — BS Software Engineering, COMSATS University Islamabad, Lahore Campus.
 
 ---
 
 ## OOP Concepts Demonstrated
 
-| Concept | Where Used |
-|---------|-----------|
-| **Encapsulation** | All model classes (`Book`, `Member`, `Person`) use private fields with public getters/setters |
-| **Inheritance** | `Member` and `Librarian` both extend the abstract `Person` class |
-| **Abstraction** | `Person` is an abstract class with abstract methods `getRole()` and `displayInfo()` |
-| **Polymorphism** | `getRole()` and `displayInfo()` are overridden differently in `Member` vs `Librarian` |
-| **Interfaces** | `LibraryService` implements `Manageable<Book>` and `Searchable<Book>` |
-| **Generics** | `Searchable<T>` and `Manageable<T>` are generic interfaces |
-| **Collections** | `ArrayList` used for books, members, and transactions |
-| **File I/O** | Java Serialization (`ObjectOutputStream`) for persistent data storage |
-| **Exception Handling** | `try-catch` in `DataStorage` for robust file operations |
+| Concept | Where Applied |
+|---|---|
+| **Encapsulation** | Private fields in all model classes, accessed via getters/setters |
+| **Abstraction** | `Person` is abstract with abstract methods `getRole()` and `displayInfo()` |
+| **Inheritance** | `Member` and `Librarian` both extend `Person` |
+| **Polymorphism** | `getRole()` and `displayInfo()` overridden in each subclass; `LibraryService` referenced via interfaces |
+| **Interfaces** | `Manageable<T>` (CRUD) and `Searchable<T>` (search) both implemented by `LibraryService` |
+| **Generics** | Interfaces use `<T>` type parameters |
+| **Collections** | `ArrayList` for books, members, transactions |
+| **File I/O** | Java Object Serialization for persistence across runs |
+| **Exception Handling** | `try-catch` in `DataStorage` prevents crashes on missing/corrupt files |
+
+---
+
+## Features
+
+- Add / update / remove books and view full catalog
+- Search books by title, author, or genre
+- Register / update / remove / suspend members
+- Issue books to members (validates availability, borrow limit, outstanding fines)
+- Return books with automatic overdue fine calculation (PKR 10/day)
+- Transaction history — all or filtered by member
+- Fine management — view and pay outstanding fines
+- Reports — library summary, top borrowed books, overdue list, members with fines
+- Sample data auto-seeded on first run (10 books, 5 members)
+
+---
+
+## Class Hierarchy
+
+```
+           Person  (abstract class)
+          /       \
+       Member   Librarian
+
+LibraryService implements Manageable<Book>, Searchable<Book>
+```
 
 ---
 
@@ -28,138 +54,68 @@ Library-Management-System-Java/
 │   └── library/
 │       ├── LibraryApp.java          ← Main entry point + all menus
 │       ├── interfaces/
-│       │   ├── Searchable.java      ← Generic search interface
-│       │   └── Manageable.java      ← Generic CRUD interface
+│       │   ├── Searchable.java
+│       │   └── Manageable.java
 │       ├── model/
 │       │   ├── Person.java          ← Abstract base class
-│       │   ├── Member.java          ← Extends Person
-│       │   ├── Librarian.java       ← Extends Person
-│       │   ├── Book.java            ← Book entity with serialization
-│       │   └── Transaction.java     ← Borrow/return record
+│       │   ├── Member.java          ← extends Person
+│       │   ├── Librarian.java       ← extends Person
+│       │   ├── Book.java
+│       │   └── Transaction.java
 │       ├── service/
 │       │   └── LibraryService.java  ← Core business logic
 │       └── util/
-│           ├── DataStorage.java     ← File persistence (Serialization)
-│           ├── DateUtil.java        ← Date helpers, ID generation
-│           └── ConsoleUI.java       ← All console I/O helpers
-├── data/                            ← Auto-created; stores .dat files
+│           ├── DataStorage.java     ← File I/O (serialization)
+│           ├── DateUtil.java
+│           └── ConsoleUI.java
+├── data/                            ← Auto-created at runtime
 ├── Makefile
 └── README.md
 ```
 
 ---
 
-## Features
+## Run Instructions
 
-**Book Management**
-- Add, view, update, and remove books
-- Search by title, author, or genre
-- Track total copies and available copies
+### Requirements
+- Java JDK 17+
+- `make` (optional)
 
-**Member Management**
-- Register, update, suspend/activate, and remove members
-- Standard and Premium membership types
-- Borrow limit: 3 books per member
-
-**Borrow & Return**
-- Issue books to members with due date (14-day loan period)
-- Return books with automatic overdue fine calculation
-- View all currently overdue books
-
-**Fine Management**
-- PKR 10 per day overdue fine
-- Block borrowing if outstanding fines exist
-- Fine payment with partial payment support
-
-**Transaction History**
-- View all transactions
-- Filter by member
-- View full details of any transaction
-
-**Reports**
-- Library summary (total books, members, issued, overdue)
-- Top 5 most borrowed books
-- Overdue report
-- Members with outstanding fines
-
-**Data Persistence**
-- All data saved automatically to `data/` using Java Serialization
-- Data survives application restarts
-- Sample data loaded on first run (10 books, 5 members)
-
----
-
-## How to Run
-
-### Prerequisites
-- Java JDK 17 or higher
-- `make` (optional — or compile manually)
-
-### Option 1: Using Make
+### With Make
 ```bash
 git clone https://github.com/AneeqAhmad11/Library-Management-System-Java.git
 cd Library-Management-System-Java
 make run
 ```
 
-### Option 2: Manual Compilation
+### Without Make
 ```bash
-git clone https://github.com/AneeqAhmad11/Library-Management-System-Java.git
-cd Library-Management-System-Java
-
-# Compile
-mkdir -p out
-javac -d out -sourcepath src $(find src -name "*.java")
-
-# Run
+javac -sourcepath src -d out $(find src -name "*.java")
 java -cp out library.LibraryApp
 ```
 
-### Option 3: IntelliJ IDEA
-1. Open IntelliJ → **File → Open** → select this folder
-2. Mark `src` as **Sources Root** (right-click → Mark Directory as → Sources Root)
-3. Run `library.LibraryApp`
+### Windows (CMD)
+```cmd
+xcopy /s /q src\*.java sources.txt
+javac -sourcepath src -d out @sources.txt
+java -cp out library.LibraryApp
+```
 
 ---
 
-## Sample Accounts (Pre-loaded)
+## Business Rules
 
-The system seeds sample data on first launch:
-
-**Books pre-loaded:** 10 books (fiction, programming, algorithms, history)
-
-**Members pre-loaded:**
-
-| Member ID | Name | Type |
-|-----------|------|------|
-| MEM-0001 | Ali Hassan | Standard |
-| MEM-0002 | Sana Tariq | Premium |
-| MEM-0003 | Usman Ghani | Standard |
-| MEM-0004 | Ayesha Malik | Premium |
-| MEM-0005 | Bilal Ahmed | Standard |
-
----
-
-## Class Hierarchy
-
-```
-Person (abstract)
-├── Member      → can borrow books, has fines
-└── Librarian   → admin, manages the system
-
-LibraryService
-├── implements Manageable<Book>
-│       add(), remove(), update(), displayAll()
-└── implements Searchable<Book>
-        searchByName(), findById()
-```
+| Rule | Value |
+|---|---|
+| Max books per member | 3 |
+| Loan period | 14 days |
+| Overdue fine | PKR 10/day |
+| Borrowing blocked if | Outstanding fine > 0 |
 
 ---
 
 ## Author
 
-**Aneeq Ahmad** — FA23-BSE-033A
-BS Software Engineering, COMSATS University Islamabad, Lahore Campus
-
-- GitHub: [@AneeqAhmad11](https://github.com/AneeqAhmad11)
-- LinkedIn: [linkedin.com/in/aneeqahmad11](https://linkedin.com/in/aneeqahmad11)
+**Aneeq Ahmad** — FA23-BSE-033A  
+BS Software Engineering, COMSATS University Islamabad, Lahore Campus  
+GitHub: [@AneeqAhmad11](https://github.com/AneeqAhmad11) · LinkedIn: [aneeqahmad11](https://linkedin.com/in/aneeqahmad11)

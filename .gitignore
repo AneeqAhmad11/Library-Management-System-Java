@@ -2,26 +2,20 @@
 out/
 *.class
 
-# IntelliJ IDEA
+# JAR
+*.jar
+
+# IDEs
 .idea/
 *.iml
-*.iws
-*.ipr
-
-# Eclipse
-.classpath
-.project
-.settings/
-
-# VS Code
 .vscode/
-
-# Data files (generated at runtime — do not commit)
-data/*.dat
+*.project
+*.classpath
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
+# Runtime data files
+data/*.dat
+!data/.gitkeep
